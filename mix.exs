@@ -22,7 +22,9 @@ defmodule Pricezilla.Mixfile do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:dialyxir, "~> 0.5", only: [:dev], runtime: false}
+      {:dialyxir, "~> 0.5", only: [:dev], runtime: false},
+      {:tesla, "~> 0.10.0"},
+      {:poison, ">= 1.0.0"}
     ]
   end
 end
