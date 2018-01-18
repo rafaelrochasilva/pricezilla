@@ -4,8 +4,9 @@
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `pricezilla` to your list of dependencies in `mix.exs`:
+Create .env file with the keys:
+export OMEGA_PRICING_API_KEY=
+export OMEGA_PRICING_API_URL=
 
 ```elixir
 def deps do
