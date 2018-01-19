@@ -25,7 +25,9 @@ defmodule Pricezilla.Mixfile do
       {:dialyxir, "~> 0.5", only: [:dev], runtime: false},
       {:httpoison, "~> 1.0"},
       {:poison, ">= 1.0.0"},
-      {:timex, "~> 3.1"}
+      {:timex, "~> 3.1"},
+      {:postgrex, "~> 0.13.3"},
+      {:ecto, "~> 2.2"}
     ]
   end
 end
