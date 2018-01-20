@@ -7,6 +7,7 @@ defmodule Pricezilla.Mixfile do
       version: "0.1.0",
       elixir: "~> 1.5",
       start_permanent: Mix.env == :prod,
+      aliases: aliases(),
       deps: deps()
     ]
   end
@@ -28,6 +29,15 @@ defmodule Pricezilla.Mixfile do
       {:timex, "~> 3.1"},
       {:postgrex, "~> 0.13.3"},
       {:ecto, "~> 2.2"}
+    ]
+  end
+
+  defp aliases do
+    [
+      "ecto.test.prepare": ["ecto.drop", "ecto.create", "ecto.migrate"],
+      "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
+      "ecto.reset": ["ecto.drop", "ecto.setup"],
+      "test": ["ecto.create --quiet", "ecto.migrate", "test"]
     ]
   end
 end

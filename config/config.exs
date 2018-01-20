@@ -2,11 +2,6 @@
 # and its dependencies with the aid of the Mix.Config module.
 use Mix.Config
 
-config :pricezilla, Pricezilla.Repo,
-  adapter: Ecto.Adapters.Postgres,
-  database: "pricezilla_repo",
-  hostname: "localhost"
-
 config :pricezilla, ecto_repos: [Pricezilla.Repo]
 
 # This configuration is loaded before any dependency and is restricted
@@ -34,4 +29,4 @@ config :pricezilla, ecto_repos: [Pricezilla.Repo]
 # Configuration from the imported file will override the ones defined
 # here (which is why it is important to import them last).
 #
-#     import_config "#{Mix.env}.exs"
+import_config "#{Mix.env}.exs"
