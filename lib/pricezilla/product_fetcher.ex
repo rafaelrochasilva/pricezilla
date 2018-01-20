@@ -13,7 +13,8 @@ defmodule Pricezilla.ProductFetcher do
   def get(client \\ HTTPoison, url \\ url_with_query() ) do
     case client.get(url) do
       {:ok, %{status_code: 200, body: body}} -> {:ok, body}
-      {:ok, %{status_code: 401, body: body}} -> {:error, body}
+      {:ok, %{status_code: _, body: body}} -> {:error, body}
+      {:error, %{reason: reason}} -> {:error, reason}
     end
   end
 
