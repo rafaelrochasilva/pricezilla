@@ -1,5 +1,4 @@
 defmodule Pricezilla.ProductFetcher do
-
   @moduledoc """
   ProductFetcher is responsable to make real http requests with different clients.
   HTTPoision is used as a defauld driver to handle http requests.
@@ -10,7 +9,7 @@ defmodule Pricezilla.ProductFetcher do
   returns the error message.
   """
   @spec get(atom) :: {:ok, map} | {:error, binary}
-  def get(client \\ HTTPoison, url \\ url_with_query() ) do
+  def get(client \\ HTTPoison, url \\ url_with_query()) do
     case client.get(url) do
       {:ok, %{status_code: 200, body: body}} -> {:ok, body}
       {:ok, %{status_code: _, body: body}} -> {:error, body}
