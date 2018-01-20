@@ -1,7 +1,7 @@
-defmodule Pricezilla.HttpClient do
+defmodule Pricezilla.ProductFetcher do
 
   @moduledoc """
-  HttpClient is responsable to make real http requests with different clients.
+  ProductFetcher is responsable to make real http requests with different clients.
   HTTPoision is used as a defauld driver to handle http requests.
   """
 
