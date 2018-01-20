@@ -8,6 +8,9 @@ Create .env file with the keys:
 export OMEGA_PRICING_API_KEY=
 export OMEGA_PRICING_API_URL=
 
+After creating load the .env
+`source .env`
+
 ```elixir
 def deps do
   [
