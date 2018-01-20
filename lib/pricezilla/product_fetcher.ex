@@ -22,7 +22,7 @@ defmodule Pricezilla.ProductFetcher do
   end
 
   defp query do
-    "?token=#{token()}&start_date=#{start_date()}&end_date=#{end_date()}"
+    "?api_key=#{token()}&start_date=#{start_date()}&end_date=#{end_date()}"
   end
 
   defp start_date do
