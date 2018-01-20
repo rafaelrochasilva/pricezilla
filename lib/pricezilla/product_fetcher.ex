@@ -11,10 +11,14 @@ defmodule Pricezilla.ProductFetcher do
   @spec get(atom) :: {:ok, map} | {:error, binary}
   def get(client \\ HTTPoison, url \\ url_with_query()) do
     case client.get(url) do
-      {:ok, %{status_code: 200, body: body}} -> {:ok, body}
+      {:ok, %{status_code: 200, body: body}} -> {:ok, parse_response(body)}
       {:ok, %{status_code: _, body: body}} -> {:error, body}
       {:error, %{reason: reason}} -> {:error, reason}
     end
+  end
+
+  defp parse_response(body) do
+    Poison.decode!(body)
   end
 
   defp url_with_query do
