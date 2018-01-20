@@ -1,15 +1,16 @@
 use Mix.Config
 
-# Print only warnings and errors during test
-config :logger, level: :warn
-
 # Configure database
 config :pricezilla, Pricezilla.Repo,
   adapter: Ecto.Adapters.Postgres,
   database: "pricezilla_dev",
-  pool: 10,
+  pool_size: 10,
   port: 5432
 
+config :logger, :info,
+  path: "log/dev/info.log",
+  level: :info
 
-
-
+config :logger, :error,
+  path: "log/dev/error.log",
+  level: :error

@@ -27,6 +27,7 @@ defmodule Pricezilla.Mixfile do
       {:httpoison, "~> 1.0"},
       {:poison, ">= 1.0.0"},
       {:timex, "~> 3.1"},
+      {:logger_file_backend, "~> 0.0.10"},
       {:postgrex, "~> 0.13.3"},
       {:ecto, "~> 2.2"}
     ]
