@@ -3,7 +3,7 @@ defmodule Pricezilla.PastPriceRecordSanitizer do
   Sanitizes the past price record to proper format
   """
 
-  @spec sanitize(map, map) :: map
+  @spec sanitize(any, any) :: map
   def sanitize(product, current_product) do
     %{
       product_id: current_product.id,

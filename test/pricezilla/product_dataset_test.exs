@@ -11,20 +11,6 @@ defmodule Pricezilla.ProductDatasetTest do
     load_products_into_database()
   end
 
-  describe "Verifies if it is a new product, given an external_product_id" do
-    test "returns true if ir is a new product" do
-      external_product_id = 1
-
-      assert ProductDataset.new_product?(external_product_id) == true
-    end
-
-    test "returns false if a product already exists" do
-      external_product_id = 123456
-
-      assert ProductDataset.new_product?(external_product_id) == false
-    end
-  end
-
   describe "Given a new product, with an external_product_id not saved" do
     test "saves a continued product" do
       product = %{

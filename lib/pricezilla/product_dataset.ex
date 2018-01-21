@@ -18,20 +18,13 @@ defmodule Pricezilla.ProductDataset do
     end
   end
 
-  @spec new_product?(number) :: boolean
-  def new_product?(external_product_id) do
-    case get_product_by(external_product_id) do
-      nil -> true
-      %Product{} -> false
-    end
-  end
-
+  @spec get_product_by(number) :: map | nil
   def get_product_by(external_product_id) do
     Repo.get_by(Product, external_product_id: external_product_id)
   end
 
   defp continued_and_new?(%{discontinued: discontinued, external_product_id: external_product_id}) do
-    discontinued == false && new_product?(external_product_id)
+    discontinued == false && get_product_by(external_product_id) == nil
   end
 
   defp same_name_and_different_price?(%{product_name: name, price: price, external_product_id: external_product_id}) do
@@ -42,6 +35,7 @@ defmodule Pricezilla.ProductDataset do
 
   defp existing_product_with_different_name?(%{product_name: name, external_product_id: external_product_id}) do
     fetched_product = get_product_by(external_product_id)
+
     name != fetched_product.product_name
   end
 
