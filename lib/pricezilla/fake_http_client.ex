@@ -30,8 +30,9 @@ defmodule Pricezilla.FakeHttpClient do
   end
 
   defp response do
+    random = random_data()
     %{
-      body: fetch_products(),
+      body: fetch_products(random: random),
       headers: [{"Connection", "keep-alive"}],
       status_code: 200
     }
@@ -45,7 +46,49 @@ defmodule Pricezilla.FakeHttpClient do
     }
   end
 
-  defp fetch_products do
+  defp fetch_products(random: false) do
     "{\"productRecords\":[{\"price\":\"$30.25\",\"name\":\"Nice Chair\",\"id\":123456,\"discontinued\":false,\"category\":\"home-furnishings\"},{\"price\":\"$43.77\",\"name\":\"Black & White TV\",\"id\":234567,\"discontinued\":true,\"category\":\"electronics\"}]}"
+  end
+
+  defp fetch_products(random: true) do
+    products = %{
+      productRecords: dynamic_data()
+    }
+    Poison.encode!(products)
+  end
+
+  defp random_data() do
+    case Mix.env do
+      :dev -> true
+      :test -> false
+    end
+  end
+
+  defp dynamic_data do
+    for _ <- (1..4) do
+      %{
+        "category" => Enum.random(categories()),
+        "discontinued" => Enum.random([true, false]),
+        "id" => Enum.random(ids()),
+        "name" => Enum.random(names()),
+        "price" => Enum.random(prices())
+      }
+    end
+  end
+
+  defp categories do
+    ["electronics", "home-furnishing", "sports"]
+  end
+
+  defp ids do
+    [12345, 12346, 12347, 123458]
+  end
+
+  defp prices do
+    ["$13.41", "$45.23", "$345.43", "$76.43"]
+  end
+
+  defp names do
+    ["generic_1","generic_2","generic_3","generic_4","generic_5"]
   end
 end
