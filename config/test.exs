@@ -7,6 +7,7 @@ config :pricezilla, Pricezilla.Repo,
   pool: Ecto.Adapters.SQL.Sandbox,
   port: 5432
 
+config :logger, level: :warn
 config :logger, :info,
   path: "log/test/info.log",
   level: :info
