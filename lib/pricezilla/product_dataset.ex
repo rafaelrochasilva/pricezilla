@@ -6,6 +6,11 @@ defmodule Pricezilla.ProductDataset do
 
   alias Pricezilla.{Repo, Product, PastPriceRecord, PastPriceRecordSanitizer}
 
+  @spec insert_all([map]) :: [map]
+  def insert_all(products) do
+    Enum.map(products, &insert_product/1)
+  end
+
   @spec insert_product(map) :: {:ok, map} | {:error, binary}
   def insert_product(product) do
     cond do

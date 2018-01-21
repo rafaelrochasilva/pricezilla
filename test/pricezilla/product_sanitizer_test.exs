@@ -26,7 +26,7 @@ defmodule Pricezilla.ProductSanitizerTest do
       }
     ]
 
-    assert ProductSanitizer.sanitize(products) == expected_response
+    assert ProductSanitizer.sanitize_all(products) == expected_response
   end
 
   test "sanitizes a given product" do

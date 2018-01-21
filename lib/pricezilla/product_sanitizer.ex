@@ -7,8 +7,8 @@ defmodule Pricezilla.ProductSanitizer do
   @doc """
   Sanitizes the api response.
   """
-  @spec sanitize([map]) :: [map]
-  def sanitize(params) do
+  @spec sanitize_all(any) :: [map]
+  def sanitize_all(params) do
     params["productRecords"]
     |> Enum.map(&sanitize_product/1)
   end
