@@ -10,9 +10,8 @@ defmodule Pricezilla.Application do
 
     # List all child processes to be supervised
     children = [
-      supervisor(Pricezilla.Repo, [])
-      # Starts a worker by calling: Pricezilla.Worker.start_link(arg)
-      # {Pricezilla.Worker, arg},
+      supervisor(Pricezilla.Repo, []),
+      worker(Pricezilla.PriceProcessor, [])
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
