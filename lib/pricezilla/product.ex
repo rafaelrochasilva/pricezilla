@@ -17,4 +17,11 @@ defmodule Pricezilla.Product do
     |> Ecto.Changeset.cast(params, [:external_product_id, :price, :product_name])
     |> Ecto.Changeset.validate_required([:external_product_id, :price, :product_name])
   end
+
+  def changeset(current_product, new_product) do
+    current_product
+    |> Ecto.Changeset.cast(new_product, [:price])
+    |> Ecto.Changeset.validate_required([:price])
+    |> Ecto.Changeset.change(price: new_product.price)
+  end
 end

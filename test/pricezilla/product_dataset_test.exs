@@ -57,6 +57,48 @@ defmodule Pricezilla.ProductDatasetTest do
     end
   end
 
+  describe "Given an existing product, with same name and price differs" do
+    test "creates a new past price record and update product price for a discontinued product" do
+      external_product_id = 123456
+      existing_product = ProductDataset.get_product_by(external_product_id)
+      new_product = %{
+        category: "home-furnishings",
+        discontinued: true,
+        external_product_id: external_product_id,
+        product_name: "Nice Chair",
+        price: 8000
+      }
+
+      {:ok, product_created, past_price_record} = ProductDataset.insert_product(new_product)
+
+      assert product_created.external_product_id == external_product_id
+      refute product_created.price == existing_product.price
+      assert product_created.price == 8000
+      assert past_price_record.product_id == existing_product.id
+      assert past_price_record.price == existing_product.price
+    end
+
+    test "creates a new past price record and update product price for a continued product" do
+      external_product_id = 123457
+      existing_product = ProductDataset.get_product_by(external_product_id)
+      new_product = %{
+        category: "sports",
+        discontinued: false,
+        external_product_id: external_product_id,
+        product_name: "Surf Board",
+        price: 6000
+      }
+
+      {:ok, product_created, past_price_record} = ProductDataset.insert_product(new_product)
+
+      assert product_created.external_product_id == external_product_id
+      refute product_created.price == existing_product.price
+      assert product_created.price == 6000
+      assert past_price_record.product_id == existing_product.id
+      assert past_price_record.price == existing_product.price
+    end
+  end
+
   defp load_products_into_database() do
     products = [
       %Product{ external_product_id: 123456, product_name: "Nice Chair", price: 4000 },
