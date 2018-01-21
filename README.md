@@ -28,16 +28,31 @@ Run the tests
 `mix test`
 
 ## Start the application
-`mix run --no-halt`
+To visualize the price faster it is better to change the config bellow:
+```
+lib/pricezilla/price_processor.ex:40
+Process.send_after(self(), :refresh, :timer.seconds(2))
+```
+and run:
+```
+mix run --no-halt
+```
 
 ## Project deps
 The project deps above were used to help me build the project
 
-dialyxir: Type check
-httpoison: Make http requests
-poison: Parse Json
-timex: Manipulate dates
-logger_file_backend: Log into file
-faker: Create fake data
-postgrex: Database
-ecto: Database wrapper
+- dialyxir: Type check
+
+- httpoison: Make http requests
+
+- poison: Parse Json
+
+- timex: Manipulate dates
+
+- logger_file_backend: Log into file
+
+- faker: Create fake data
+
+- postgrex: Database
+
+- ecto: Database wrapper
