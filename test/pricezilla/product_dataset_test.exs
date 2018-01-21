@@ -26,20 +26,6 @@ defmodule Pricezilla.ProductDatasetTest do
   end
 
   describe "Given a new product, with an external_product_id not saved" do
-    test "does not save a discontinued product" do
-      product = %{
-        category: "luggage",
-        discontinued: true,
-        external_product_id: 4323332,
-        product_name: "Wallet",
-        price: 1022
-      }
-
-      expected_response = {:error, "This product was discontinued and will not be saved"}
-
-      assert ProductDataset.insert_product(product) == expected_response
-    end
-
     test "saves a continued product" do
       product = %{
         category: "footwear",
@@ -96,6 +82,30 @@ defmodule Pricezilla.ProductDatasetTest do
       assert product_created.price == 6000
       assert past_price_record.product_id == existing_product.id
       assert past_price_record.price == existing_product.price
+    end
+  end
+
+  # If there is an existing product record with a matching external_product_id,
+  # but a different product name, log an error message that warns the team that
+  # there is a mismatch. Do not update the price.
+  describe "Given an existing product, with different name" do
+    test "logs a error message" do
+      product = %{
+        category: "sports",
+        discontinued: false,
+        external_product_id: 123457,
+        product_name: "Cool Board",
+        price: 6000
+      }
+
+      {:error, message} = ProductDataset.insert_product(product)
+
+      expected_message = Regex.match?(
+        ~r/This product has a different name and can not be saved/,
+        message
+      )
+
+      assert expected_message == true
     end
   end
 

@@ -11,10 +11,10 @@ defmodule Pricezilla.ProductDataset do
     cond do
       continued_and_new?(product) ->
         create(product)
-      discontinued_and_new?(product) ->
-        log_error_message(product)
       same_name_and_different_price?(product) ->
         create_past_price_record(product)
+      existing_product_with_different_name?(product) ->
+        log_name_error_message(product)
     end
   end
 
@@ -34,20 +34,20 @@ defmodule Pricezilla.ProductDataset do
     discontinued == false && new_product?(external_product_id)
   end
 
-  defp discontinued_and_new?(%{discontinued: discontinued, external_product_id: external_product_id}) do
-    discontinued == true && new_product?(external_product_id)
-  end
-
   defp same_name_and_different_price?(%{product_name: name, price: price, external_product_id: external_product_id}) do
     fetched_product = get_product_by(external_product_id)
 
     fetched_product.product_name == name && fetched_product.price != price
   end
 
-  defp log_error_message(%{external_product_id: external_product_id}) do
-    message = "This product was discontinued and will not be saved"
-    Logger.error "#{message}, external_product_id: #{external_product_id}"
+  defp existing_product_with_different_name?(%{product_name: name, external_product_id: external_product_id}) do
+    fetched_product = get_product_by(external_product_id)
+    name != fetched_product.product_name
+  end
 
+  def log_name_error_message(product) do
+    message = "This product has a different name and can not be saved #{inspect(product)}"
+    Logger.error(message)
     {:error, message}
   end
 
@@ -59,8 +59,7 @@ defmodule Pricezilla.ProductDataset do
         Logger.info "Product created -> external_product_id: #{product.external_product_id}"
         {:ok, product}
       {:error, message} ->
-        Logger.error "Could not create product -> external_product_id: #{product.external_product_id}"
-        {:error, message}
+        Logger.error "Could not create product -> #{message}"
     end
   end
 
@@ -78,7 +77,6 @@ defmodule Pricezilla.ProductDataset do
         update(current_product, new_product, past_price_record)
       {:error, message} ->
         Logger.error "Could not create past price record: #{message}"
-        {:error, message}
     end
   end
 
