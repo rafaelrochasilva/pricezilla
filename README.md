@@ -1,18 +1,23 @@
 # Pricezilla
 
-**TODO: Add description**
+Pricezilla is one of the best choices for tracking products pricing. :)
+Product price information is fetched from an external API - Omege Princing Inc.
+a **FICTICIOUS** API and Company.
 
 ## Installation
+Follow the steps bellow to setup the project.
 
 Setup libraries:
 `mix deps.get`
 `mix deps.compile`
 
-Create .env file with the keys:
-export OMEGA_PRICING_API_KEY=
-export OMEGA_PRICING_API_URL=
+Create .env file with the keys, (since the keys are fake I'm sharing it here)
+```
+export OMEGA_PRICING_API_KEY="SF934-DKFJ3-S3CR3T-K3Y"
+export OMEGA_PRICING_API_URL="https://omegapricinginc.com/pricing/records.json"
+```
 
-After creating load the .env
+Load the .env:
 `source .env`
 
 Setup database:
@@ -22,18 +27,17 @@ Setup database:
 Run the tests
 `mix test`
 
-Start the application
-`elixir app_name`
+## Start the application
+`mix run --no-halt`
 
-```elixir
-def deps do
-  [
-    {:pricezilla, "~> 0.1.0"}
-  ]
-end
-```
+## Project deps
+The project deps above were used to help me build the project
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/pricezilla](https://hexdocs.pm/pricezilla).
-
+dialyxir: Type check
+httpoison: Make http requests
+poison: Parse Json
+timex: Manipulate dates
+logger_file_backend: Log into file
+faker: Create fake data
+postgrex: Database
+ecto: Database wrapper
