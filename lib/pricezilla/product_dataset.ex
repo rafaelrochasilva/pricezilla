@@ -11,7 +11,7 @@ defmodule Pricezilla.ProductDataset do
     Enum.map(products, &insert_product/1)
   end
 
-  @spec insert_product(map) :: {:ok, map} | {:error, binary}
+  @spec insert_product(map) :: {:ok, any} | {:error, binary}
   def insert_product(product) do
     cond do
       continued_and_new?(product) ->
@@ -20,6 +20,8 @@ defmodule Pricezilla.ProductDataset do
         create_past_price_record(product)
       existing_product_with_different_name?(product) ->
         log_name_error_message(product)
+      true ->
+        {:error, product.external_product_id}
     end
   end
 
@@ -33,15 +35,15 @@ defmodule Pricezilla.ProductDataset do
   end
 
   defp same_name_and_different_price?(%{product_name: name, price: price, external_product_id: external_product_id}) do
-    fetched_product = get_product_by(external_product_id)
+    product = get_product_by(external_product_id)
 
-    fetched_product.product_name == name && fetched_product.price != price
+    product != nil && product.product_name == name && product.price != price
   end
 
   defp existing_product_with_different_name?(%{product_name: name, external_product_id: external_product_id}) do
-    fetched_product = get_product_by(external_product_id)
+    product = get_product_by(external_product_id)
 
-    name != fetched_product.product_name
+    product != nil && name != product.product_name
   end
 
   def log_name_error_message(product) do
@@ -54,11 +56,12 @@ defmodule Pricezilla.ProductDataset do
     changeset = Product.changeset(product)
 
     case Repo.insert(changeset) do
-      {:ok, product} ->
-        Logger.info "Product created -> external_product_id: #{product.external_product_id}"
-        {:ok, product}
+      {:ok, new_product} ->
+        Logger.info "Product created -> external_product_id: #{new_product.external_product_id}"
+        {:ok, new_product}
       {:error, message} ->
         Logger.error "Could not create product -> #{message}"
+        {:error, product.external_product_id}
     end
   end
 
@@ -76,6 +79,7 @@ defmodule Pricezilla.ProductDataset do
         update(current_product, new_product, past_price_record)
       {:error, message} ->
         Logger.error "Could not create past price record: #{message}"
+        {:error, current_product.external_product_id}
     end
   end
 
@@ -88,7 +92,7 @@ defmodule Pricezilla.ProductDataset do
         {:ok, product_updated, past_price_record}
       {:error, message} ->
         Logger.error "Could not update product -> external_product_id: #{current_product.external_product_id}, message: #{message}"
-        {:error, message}
+          {:error, current_product.external_product_id}
     end
   end
 end
