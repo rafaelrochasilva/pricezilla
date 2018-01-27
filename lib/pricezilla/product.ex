@@ -16,12 +16,45 @@ defmodule Pricezilla.Product do
     %__MODULE__{}
     |> Ecto.Changeset.cast(params, [:external_product_id, :price, :product_name])
     |> Ecto.Changeset.validate_required([:external_product_id, :price, :product_name])
+    |> validate_continued(params.discontinued)
   end
 
   def changeset(current_product, new_product) do
     current_product
-    |> Ecto.Changeset.cast(new_product, [:price])
-    |> Ecto.Changeset.validate_required([:price])
-    |> Ecto.Changeset.change(price: new_product.price)
+    |> Ecto.Changeset.cast(new_product, [:price, :product_name])
+    |> Ecto.Changeset.validate_required([:price, :product_name])
+    |> different_price(current_product.price, new_product.price)
+    |> Ecto.Changeset.validate_change(
+      :product_name, fn(:product_name, name) ->
+        same_product_name(name, current_product.product_name)
+      end
+    )
+  end
+
+  def validate_continued(changeset, discontinued) do
+    case discontinued == false do
+      false ->
+        Ecto.Changeset.add_error(
+          changeset, :discontinued, "cannot save a discontinued product"
+        )
+      true -> changeset
+    end
+  end
+
+  defp same_product_name(new_product_name, current_product_name) do
+    case new_product_name == current_product_name do
+      true -> []
+      false -> [product_name: "cannot use a different product name"]
+    end
+  end
+
+  defp different_price(changeset, current_price, new_price) do
+    case current_price == new_price do
+      true ->
+        Ecto.Changeset.add_error(
+          changeset, :price, "cannot save a same price product"
+        )
+      false -> changeset
+    end
   end
 end

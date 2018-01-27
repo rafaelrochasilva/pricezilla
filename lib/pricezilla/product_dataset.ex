@@ -12,44 +12,15 @@ defmodule Pricezilla.ProductDataset do
   end
 
   @spec insert_product(map) :: {:ok, any} | {:error, binary}
-  def insert_product(product) do
-    cond do
-      continued_and_new?(product) ->
-        create(product)
-      same_name_and_different_price?(product) ->
-        create_past_price_record(product)
-      existing_product_with_different_name?(product) ->
-        log_name_error_message(product)
-      true ->
-        {:error, product.external_product_id}
+  def insert_product(new_product) do
+    current_product = Repo.get_by(
+      Product, external_product_id: new_product.external_product_id
+    )
+
+    case current_product do
+      nil -> create(new_product)
+      _ -> update(current_product, new_product)
     end
-  end
-
-  @spec get_product_by(number) :: map | nil
-  def get_product_by(external_product_id) do
-    Repo.get_by(Product, external_product_id: external_product_id)
-  end
-
-  defp continued_and_new?(%{discontinued: discontinued, external_product_id: external_product_id}) do
-    discontinued == false && get_product_by(external_product_id) == nil
-  end
-
-  defp same_name_and_different_price?(%{product_name: name, price: price, external_product_id: external_product_id}) do
-    product = get_product_by(external_product_id)
-
-    product != nil && product.product_name == name && product.price != price
-  end
-
-  defp existing_product_with_different_name?(%{product_name: name, external_product_id: external_product_id}) do
-    product = get_product_by(external_product_id)
-
-    product != nil && name != product.product_name
-  end
-
-  def log_name_error_message(product) do
-    message = "This product has a different name and can not be saved #{inspect(product)}"
-    Logger.error(message)
-    {:error, message}
   end
 
   defp create(product) do
@@ -59,15 +30,26 @@ defmodule Pricezilla.ProductDataset do
       {:ok, new_product} ->
         Logger.info "Product created -> external_product_id: #{new_product.external_product_id}"
         {:ok, new_product}
-      {:error, message} ->
-        Logger.error "Could not create product -> #{message}"
-        {:error, product.external_product_id}
+      {:error, changeset} ->
+        Logger.error "#{inspect changeset}"
+        {:error, changeset.errors}
     end
   end
 
-  defp create_past_price_record(new_product) do
-    current_product = get_product_by(new_product.external_product_id)
+  defp update(current_product, new_product) do
+    changeset = Product.changeset(current_product, new_product)
 
+    case Repo.update(changeset) do
+      {:ok, product_updated} ->
+        Logger.info "Product updated -> external_product_id: #{product_updated.external_product_id}"
+        create_past_price_record(current_product, product_updated)
+      {:error, changeset} ->
+        Logger.error "#{inspect changeset}"
+        {:error, changeset.errors}
+    end
+  end
+
+  defp create_past_price_record(current_product, new_product) do
     changeset =
       new_product
       |> PastPriceRecordSanitizer.sanitize(current_product)
@@ -76,23 +58,10 @@ defmodule Pricezilla.ProductDataset do
     case Repo.insert(changeset) do
       {:ok, past_price_record} ->
         Logger.info "Past price record created: #{past_price_record.id}"
-        update(current_product, new_product, past_price_record)
-      {:error, message} ->
-        Logger.error "Could not create past price record: #{message}"
-        {:error, current_product.external_product_id}
-    end
-  end
-
-  defp update(current_product, new_product, past_price_record) do
-    changeset = Product.changeset(current_product, new_product)
-
-    case Repo.update(changeset) do
-      {:ok, product_updated} ->
-        Logger.info "Product updated -> external_product_id: #{product_updated.external_product_id}"
-        {:ok, product_updated, past_price_record}
-      {:error, message} ->
-        Logger.error "Could not update product -> external_product_id: #{current_product.external_product_id}, message: #{message}"
-          {:error, current_product.external_product_id}
+        {:ok, new_product, past_price_record}
+      {:error, changeset} ->
+        Logger.error "#{inspect changeset}"
+        {:error, changeset.errors}
     end
   end
 end
