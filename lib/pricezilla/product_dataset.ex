@@ -37,31 +37,27 @@ defmodule Pricezilla.ProductDataset do
   end
 
   defp update(current_product, new_product) do
-    changeset = Product.changeset(current_product, new_product)
+    product =
+      current_product
+      |> Repo.preload(:past_price_records)
+      |> Product.changeset(new_product)
 
-    case Repo.update(changeset) do
-      {:ok, product_updated} ->
-        Logger.info "Product updated -> external_product_id: #{product_updated.external_product_id}"
-        create_past_price_record(current_product, product_updated)
-      {:error, changeset} ->
-        Logger.error "#{inspect changeset}"
-        {:error, changeset.errors}
-    end
-  end
-
-  defp create_past_price_record(current_product, new_product) do
-    changeset =
+    past_price_record =
       new_product
       |> PastPriceRecordSanitizer.sanitize(current_product)
-      |> PastPriceRecord.changeset
+      |> PastPriceRecord.changeset()
 
-    case Repo.insert(changeset) do
-      {:ok, past_price_record} ->
-        Logger.info "Past price record created: #{past_price_record.id}"
-        {:ok, new_product, past_price_record}
-      {:error, changeset} ->
-        Logger.error "#{inspect changeset}"
-        {:error, changeset.errors}
+    product_with_record = Ecto.Changeset.put_assoc(product, :past_price_records, [past_price_record])
+
+    Repo.transaction fn ->
+      case Repo.update(product_with_record) do
+        {:ok, product_updated} ->
+          Logger.info "[Product updated] #{inspect product_updated}"
+          product_updated
+        {:error, changeset} ->
+          Logger.error "#{inspect changeset}"
+          Repo.rollback(changeset)
+      end
     end
   end
 end

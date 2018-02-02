@@ -1,7 +1,7 @@
 defmodule Pricezilla.ProductDatasetTest do
   use ExUnit.Case, async: true
 
-  alias Pricezilla.{Product, ProductDataset}
+  alias Pricezilla.{Product, ProductDataset, Repo}
 
   setup do
     # Explicitly get a connection before each test
@@ -32,9 +32,7 @@ defmodule Pricezilla.ProductDatasetTest do
   describe "Given an existing product, with same name and price differs" do
     test "creates a new past price record and update product price for a discontinued product" do
       external_product_id = 123456
-      existing_product = Pricezilla.Repo.get_by(
-        Product, external_product_id: external_product_id
-      )
+      existing_product = Repo.get_by(Product, external_product_id: external_product_id)
       new_product = %{
         category: "home-furnishings",
         discontinued: true,
@@ -43,7 +41,10 @@ defmodule Pricezilla.ProductDatasetTest do
         price: 8000
       }
 
-      {:ok, product_created, past_price_record} = ProductDataset.insert_product(new_product)
+      {:ok, product_created} = ProductDataset.insert_product(new_product)
+      past_price_record =
+        product_created.past_price_records
+        |> List.first
 
       assert product_created.external_product_id == external_product_id
       refute product_created.price == existing_product.price
@@ -54,9 +55,7 @@ defmodule Pricezilla.ProductDatasetTest do
 
     test "creates a new past price record and update product price for a continued product" do
       external_product_id = 123457
-      existing_product = Pricezilla.Repo.get_by(
-        Product, external_product_id: external_product_id
-      )
+      existing_product = Repo.get_by(Product, external_product_id: external_product_id)
       new_product = %{
         category: "sports",
         discontinued: false,
@@ -65,7 +64,10 @@ defmodule Pricezilla.ProductDatasetTest do
         price: 6000
       }
 
-      {:ok, product_created, past_price_record} = ProductDataset.insert_product(new_product)
+      {:ok, product_created} = ProductDataset.insert_product(new_product)
+      past_price_record =
+        product_created.past_price_records
+        |> List.first
 
       assert product_created.external_product_id == external_product_id
       refute product_created.price == existing_product.price
@@ -85,16 +87,13 @@ defmodule Pricezilla.ProductDatasetTest do
         product_name: "Nice Chair",
         price: 4000
       }
-      existing_product = Pricezilla.Repo.get_by(
-        Product, external_product_id: external_product_id
-      )
 
       ProductDataset.insert_product(new_product)
 
       {:error, changeset} = ProductDataset.insert_product(new_product)
 
       errors = Enum.map(
-        changeset,
+        changeset.errors,
         fn {field, {message, _opts}} -> {field, message} end
       )
 
@@ -118,7 +117,7 @@ defmodule Pricezilla.ProductDatasetTest do
       {:error, changeset} = ProductDataset.insert_product(product)
 
       errors = Enum.map(
-        changeset,
+        changeset.errors,
         fn {field, {message, _opts}} -> {field, message} end
       )
 
