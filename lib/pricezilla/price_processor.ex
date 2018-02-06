@@ -23,7 +23,7 @@ defmodule Pricezilla.PriceProcessor do
     Logger.info "[Fetching Prices]"
     initial_state = process()
     Logger.info "[Products processed] #{inspect(initial_state)}"
-    scheadule_refresh()
+    schedule_refresh()
     {:ok, initial_state}
   end
 
@@ -31,7 +31,7 @@ defmodule Pricezilla.PriceProcessor do
     Logger.info "[Refreshing products]"
     new_state = process()
     Logger.info "[Products processed] #{inspect(new_state)}"
-    scheadule_refresh()
+    schedule_refresh()
     {:noreply, new_state}
   end
 
@@ -39,7 +39,7 @@ defmodule Pricezilla.PriceProcessor do
   # seconds scheduler, to test quickly using:
   #
   # Process.send_after(self(), :refresh, :timer.seconds(2))
-  defp scheadule_refresh do
+  defp schedule_refresh do
     Process.send_after(self(), :refresh, :timer.hours(@time))
   end
 
