@@ -3,6 +3,8 @@ defmodule Pricezilla.PriceProcessor do
   The PriceProcessor is responsable to fetch the new data from external api,
   sanitize the products and save.
   """
+  require Logger
+
   use GenServer
 
   alias Pricezilla.{ProductFetcher, ProductSanitizer, ProductDataset, FakeHttpClient}
@@ -18,17 +20,17 @@ defmodule Pricezilla.PriceProcessor do
   # Server Callbacks
 
   def init(:ok) do
-    IO.puts "Fetching prices.."
+    Logger.info "[Fetching Prices]"
     initial_state = process()
-    IO.puts "Products processed: #{inspect(initial_state)}"
+    Logger.info "[Products processed] #{inspect(initial_state)}"
     scheadule_refresh()
     {:ok, initial_state}
   end
 
   def handle_info(:refresh, _state) do
-    IO.puts "Refreshing products..."
+    Logger.info "[Refreshing products]"
     new_state = process()
-    IO.puts "Products processed: #{inspect(new_state)}"
+    Logger.info "[Products processed] #{inspect(new_state)}"
     scheadule_refresh()
     {:noreply, new_state}
   end

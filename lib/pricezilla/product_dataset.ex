@@ -28,10 +28,10 @@ defmodule Pricezilla.ProductDataset do
 
     case Repo.insert(changeset) do
       {:ok, new_product} ->
-        Logger.info "Product created -> external_product_id: #{new_product.external_product_id}"
+        Logger.info "[Time] #{Timex.now} [Product created] #{inspect new_product}"
         {:ok, new_product}
       {:error, changeset} ->
-        Logger.error "#{inspect changeset}"
+        Logger.error "[Time] #{Timex.now} [Error message] #{inspect changeset}"
         {:error, changeset.errors}
     end
   end
@@ -52,10 +52,10 @@ defmodule Pricezilla.ProductDataset do
     Repo.transaction fn ->
       case Repo.update(product_with_record) do
         {:ok, product_updated} ->
-          Logger.info "[Product updated] #{inspect product_updated}"
+          Logger.info "[Time] #{Timex.now} [Product updated] #{inspect product_updated}"
           product_updated
         {:error, changeset} ->
-          Logger.error "#{inspect changeset}"
+          Logger.error "[Time] #{Timex.now} [Error message] #{inspect changeset}"
           Repo.rollback(changeset)
       end
     end
