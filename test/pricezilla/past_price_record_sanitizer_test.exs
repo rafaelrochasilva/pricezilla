@@ -7,13 +7,13 @@ defmodule Pricezilla.PastPriceRecordSanitizerTest do
     current_product = %{
       id: 1,
       external_product_id: 123456,
-      product_name: "Nice Chair",
+      name: "Nice Chair",
       price: 2000
     }
 
     new_product = %{
       external_product_id: 123456,
-      product_name: "Nice Chair",
+      name: "Nice Chair",
       price: 4000
     }
 

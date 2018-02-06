@@ -21,7 +21,7 @@ defmodule Pricezilla.ProductSanitizerTest do
         category: "home-furnishings",
         discontinued: false,
         external_product_id: 123456,
-        product_name: "Nice Chair",
+        name: "Nice Chair",
         price: 3025
       }
     ]
@@ -42,7 +42,7 @@ defmodule Pricezilla.ProductSanitizerTest do
       category: "home-furnishings",
       discontinued: false,
       external_product_id: 123456,
-      product_name: "Nice Chair",
+      name: "Nice Chair",
       price: 3025
     }
 

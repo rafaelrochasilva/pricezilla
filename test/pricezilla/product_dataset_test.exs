@@ -17,7 +17,7 @@ defmodule Pricezilla.ProductDatasetTest do
         category: "footwear",
         discontinued: false,
         external_product_id: 7354645,
-        product_name: "Flip Flop",
+        name: "Flip Flop",
         price: 7022
       }
 
@@ -25,7 +25,7 @@ defmodule Pricezilla.ProductDatasetTest do
 
       assert product_created.external_product_id == 7354645
       assert product_created.price == 7022
-      assert product_created.product_name == "Flip Flop"
+      assert product_created.name == "Flip Flop"
     end
   end
 
@@ -37,7 +37,7 @@ defmodule Pricezilla.ProductDatasetTest do
         category: "home-furnishings",
         discontinued: true,
         external_product_id: external_product_id,
-        product_name: "Nice Chair",
+        name: "Nice Chair",
         price: 8000
       }
 
@@ -60,7 +60,7 @@ defmodule Pricezilla.ProductDatasetTest do
         category: "sports",
         discontinued: false,
         external_product_id: external_product_id,
-        product_name: "Surf Board",
+        name: "Surf Board",
         price: 6000
       }
 
@@ -84,7 +84,7 @@ defmodule Pricezilla.ProductDatasetTest do
         category: "home-furnishings",
         discontinued: false,
         external_product_id: external_product_id,
-        product_name: "Nice Chair",
+        name: "Nice Chair",
         price: 4000
       }
 
@@ -110,7 +110,7 @@ defmodule Pricezilla.ProductDatasetTest do
         category: "sports",
         discontinued: false,
         external_product_id: 123457,
-        product_name: "Cool Board",
+        name: "Cool Board",
         price: 6000
       }
 
@@ -121,16 +121,16 @@ defmodule Pricezilla.ProductDatasetTest do
         fn {field, {message, _opts}} -> {field, message} end
       )
 
-      assert {:product_name, "cannot use a different product name"} in errors
+      assert {:name, "cannot use a different product name"} in errors
     end
   end
 
   defp load_products_into_database() do
     products = [
-      %Product{ external_product_id: 123456, product_name: "Nice Chair", price: 4000 },
-      %Product{ external_product_id: 123457, product_name: "Surf Board", price: 10000 },
-      %Product{ external_product_id: 234567, product_name: "TV", price: 14000 },
-      %Product{ external_product_id: 123459, product_name: "Watch", price: 7000 }
+      %Product{ external_product_id: 123456, name: "Nice Chair", price: 4000 },
+      %Product{ external_product_id: 123457, name: "Surf Board", price: 10000 },
+      %Product{ external_product_id: 234567, name: "TV", price: 14000 },
+      %Product{ external_product_id: 123459, name: "Watch", price: 7000 }
     ]
 
     Enum.each(products, fn (product) -> Pricezilla.Repo.insert(product) end)

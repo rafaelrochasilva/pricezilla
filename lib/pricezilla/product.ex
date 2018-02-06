@@ -6,7 +6,7 @@ defmodule Pricezilla.Product do
   schema "products" do
     field :external_product_id, :integer
     field :price, :integer
-    field :product_name, :string
+    field :name, :string
     has_many :past_price_records, PastPriceRecord
 
     timestamps()
@@ -14,19 +14,19 @@ defmodule Pricezilla.Product do
 
   def changeset(params \\ %{}) do
     %__MODULE__{}
-    |> Ecto.Changeset.cast(params, [:external_product_id, :price, :product_name])
-    |> Ecto.Changeset.validate_required([:external_product_id, :price, :product_name])
+    |> Ecto.Changeset.cast(params, [:external_product_id, :price, :name])
+    |> Ecto.Changeset.validate_required([:external_product_id, :price, :name])
     |> validate_continued(params.discontinued)
   end
 
   def changeset(current_product, new_product) do
     current_product
-    |> Ecto.Changeset.cast(new_product, [:price, :product_name])
-    |> Ecto.Changeset.validate_required([:price, :product_name])
+    |> Ecto.Changeset.cast(new_product, [:price, :name])
+    |> Ecto.Changeset.validate_required([:price, :name])
     |> different_price(current_product.price, new_product.price)
     |> Ecto.Changeset.validate_change(
-      :product_name, fn(:product_name, name) ->
-        same_product_name(name, current_product.product_name)
+      :name, fn(:name, name) ->
+        same_name(name, current_product.name)
       end
     )
   end
@@ -41,10 +41,10 @@ defmodule Pricezilla.Product do
     end
   end
 
-  defp same_product_name(new_product_name, current_product_name) do
-    case new_product_name == current_product_name do
+  defp same_name(new_name, current_name) do
+    case new_name == current_name do
       true -> []
-      false -> [product_name: "cannot use a different product name"]
+      false -> [name: "cannot use a different product name"]
     end
   end
 

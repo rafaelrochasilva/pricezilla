@@ -19,7 +19,7 @@ defmodule Pricezilla.ProductSanitizer do
       category: product["category"],
       discontinued: product["discontinued"],
       external_product_id: product["id"],
-      product_name: product["name"],
+      name: product["name"],
       price: price_in_cents(product["price"])
     }
   end

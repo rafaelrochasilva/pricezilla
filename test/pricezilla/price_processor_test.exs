@@ -35,10 +35,10 @@ defmodule Pricezilla.PriceProcessorTest do
 
   defp load_products_into_database do
     products = [
-      %Product{ external_product_id: 123456, product_name: "Nice Chair", price: 4000 },
-      %Product{ external_product_id: 123457, product_name: "Surf Board", price: 10000 },
-      %Product{ external_product_id: 234567, product_name: "TV", price: 14000 },
-      %Product{ external_product_id: 123459, product_name: "Watch", price: 7000 }
+      %Product{ external_product_id: 123456, name: "Nice Chair", price: 4000 },
+      %Product{ external_product_id: 123457, name: "Surf Board", price: 10000 },
+      %Product{ external_product_id: 234567, name: "TV", price: 14000 },
+      %Product{ external_product_id: 123459, name: "Watch", price: 7000 }
     ]
 
     Enum.each(products, fn (product) -> Pricezilla.Repo.insert(product) end)
