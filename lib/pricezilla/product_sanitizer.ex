@@ -18,7 +18,7 @@ defmodule Pricezilla.ProductSanitizer do
     %{
       category: product["category"],
       discontinued: product["discontinued"],
-      external_product_id: product["id"],
+      external_product_id: Integer.to_string(product["id"]),
       name: product["name"],
       price: price_in_cents(product["price"])
     }

@@ -4,7 +4,7 @@ defmodule Pricezilla.Product do
   alias Pricezilla.PastPriceRecord
 
   schema "products" do
-    field :external_product_id, :integer
+    field :external_product_id, :string
     field :price, :integer
     field :name, :string
     has_many :past_price_records, PastPriceRecord

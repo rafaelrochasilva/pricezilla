@@ -16,11 +16,11 @@ defmodule Pricezilla.PriceProcessorTest do
     # [%{id: 123456, name: "Nice Chair", price: $30.25, discontinued: false}
     # [%{id: 123456, name: "Nice Chair", price: $43.77, discontinued: true}
     #
-    current_nice_chair = Repo.get_by(Product, external_product_id: 123456)
+    current_nice_chair = Repo.get_by(Product, external_product_id: "123456")
 
     PriceProcessor.process(FakeHttpClient)
 
-    new_nice_chair = Repo.get_by(Product, external_product_id: 123456)
+    new_nice_chair = Repo.get_by(Product, external_product_id: "123456")
 
     # We do not save discontinued products if thats whye we got 4 products.
     assert Repo.aggregate(Product, :count, :id) == 4
@@ -35,10 +35,10 @@ defmodule Pricezilla.PriceProcessorTest do
 
   defp load_products_into_database do
     products = [
-      %Product{ external_product_id: 123456, name: "Nice Chair", price: 4000 },
-      %Product{ external_product_id: 123457, name: "Surf Board", price: 10000 },
-      %Product{ external_product_id: 234567, name: "TV", price: 14000 },
-      %Product{ external_product_id: 123459, name: "Watch", price: 7000 }
+      %Product{ external_product_id: "123456", name: "Nice Chair", price: 4000 },
+      %Product{ external_product_id: "123457", name: "Surf Board", price: 10000 },
+      %Product{ external_product_id: "234567", name: "TV", price: 14000 },
+      %Product{ external_product_id: "123459", name: "Watch", price: 7000 }
     ]
 
     Enum.each(products, fn (product) -> Pricezilla.Repo.insert(product) end)

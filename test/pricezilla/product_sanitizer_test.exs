@@ -20,7 +20,7 @@ defmodule Pricezilla.ProductSanitizerTest do
       %{
         category: "home-furnishings",
         discontinued: false,
-        external_product_id: 123456,
+        external_product_id: "123456",
         name: "Nice Chair",
         price: 3025
       }
@@ -41,7 +41,7 @@ defmodule Pricezilla.ProductSanitizerTest do
     expected_response = %{
       category: "home-furnishings",
       discontinued: false,
-      external_product_id: 123456,
+      external_product_id: "123456",
       name: "Nice Chair",
       price: 3025
     }

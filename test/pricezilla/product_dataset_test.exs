@@ -16,14 +16,14 @@ defmodule Pricezilla.ProductDatasetTest do
       product = %{
         category: "footwear",
         discontinued: false,
-        external_product_id: 7354645,
+        external_product_id: "7354645",
         name: "Flip Flop",
         price: 7022
       }
 
       {:ok, product_created} = ProductDataset.insert_product(product)
 
-      assert product_created.external_product_id == 7354645
+      assert product_created.external_product_id == "7354645"
       assert product_created.price == 7022
       assert product_created.name == "Flip Flop"
     end
@@ -31,7 +31,7 @@ defmodule Pricezilla.ProductDatasetTest do
 
   describe "Given an existing product, with same name and price differs" do
     test "creates a new past price record and update product price for a discontinued product" do
-      external_product_id = 123456
+      external_product_id = "123456"
       existing_product = Repo.get_by(Product, external_product_id: external_product_id)
       new_product = %{
         category: "home-furnishings",
@@ -54,7 +54,7 @@ defmodule Pricezilla.ProductDatasetTest do
     end
 
     test "creates a new past price record and update product price for a continued product" do
-      external_product_id = 123457
+      external_product_id = "123457"
       existing_product = Repo.get_by(Product, external_product_id: external_product_id)
       new_product = %{
         category: "sports",
@@ -79,7 +79,7 @@ defmodule Pricezilla.ProductDatasetTest do
 
   describe "Given an existing product, with same name and price" do
     test "does not create a new product" do
-      external_product_id = 123456
+      external_product_id = "123456"
       new_product = %{
         category: "home-furnishings",
         discontinued: false,
@@ -109,7 +109,7 @@ defmodule Pricezilla.ProductDatasetTest do
       product = %{
         category: "sports",
         discontinued: false,
-        external_product_id: 123457,
+        external_product_id: "123457",
         name: "Cool Board",
         price: 6000
       }
@@ -127,10 +127,10 @@ defmodule Pricezilla.ProductDatasetTest do
 
   defp load_products_into_database() do
     products = [
-      %Product{ external_product_id: 123456, name: "Nice Chair", price: 4000 },
-      %Product{ external_product_id: 123457, name: "Surf Board", price: 10000 },
-      %Product{ external_product_id: 234567, name: "TV", price: 14000 },
-      %Product{ external_product_id: 123459, name: "Watch", price: 7000 }
+      %Product{ external_product_id: "123456", name: "Nice Chair", price: 4000 },
+      %Product{ external_product_id: "123457", name: "Surf Board", price: 10000 },
+      %Product{ external_product_id: "234567", name: "TV", price: 14000 },
+      %Product{ external_product_id: "123459", name: "Watch", price: 7000 }
     ]
 
     Enum.each(products, fn (product) -> Pricezilla.Repo.insert(product) end)
