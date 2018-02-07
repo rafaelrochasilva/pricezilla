@@ -1,13 +1,13 @@
 defmodule Pricezilla.PriceProcessor do
   @moduledoc """
   The PriceProcessor is responsable to fetch the new data from external api,
-  sanitize the products and save.
+  convert the products to a proper format and save.
   """
   require Logger
 
   use GenServer
 
-  alias Pricezilla.{ProductFetcher, ProductSanitizer, ProductDataset, FakeHttpClient}
+  alias Pricezilla.{ProductFetcher, ProductMapper, ProductDataset, FakeHttpClient}
 
   @name :price_processor
   @time 30 * 24
@@ -51,7 +51,7 @@ defmodule Pricezilla.PriceProcessor do
     {:ok, products} = ProductFetcher.get(client)
 
     products
-    |> ProductSanitizer.sanitize_all()
+    |> ProductMapper.convert_all()
     |> ProductDataset.insert_all()
   end
 end

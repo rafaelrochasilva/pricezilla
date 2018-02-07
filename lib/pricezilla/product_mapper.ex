@@ -1,20 +1,20 @@
-defmodule Pricezilla.ProductSanitizer do
+defmodule Pricezilla.ProductMapper do
   @moduledoc """
-  Sanitizes the api response and use a proper format instead of using the API
+  Maps the api response and use a proper format instead of using the API
   response format.
   """
 
   @doc """
-  Sanitizes the api response.
+  Maps the api response.
   """
-  @spec sanitize_all(any) :: [map]
-  def sanitize_all(params) do
+  @spec convert_all(any) :: [map]
+  def convert_all(params) do
     params["productRecords"]
-    |> Enum.map(&sanitize_product/1)
+    |> Enum.map(&convert_product/1)
   end
 
-  @spec sanitize_product(map) :: map
-  def sanitize_product(product) do
+  @spec convert_product(map) :: map
+  def convert_product(product) do
     %{
       category: product["category"],
       discontinued: product["discontinued"],
