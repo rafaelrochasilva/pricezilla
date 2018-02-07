@@ -1,9 +1,9 @@
-defmodule Pricezilla.ProductSanitizerTest do
+defmodule Pricezilla.ProductMapperTest do
   use ExUnit.Case, async: true
 
-  alias Pricezilla.ProductSanitizer
+  alias Pricezilla.ProductMapper
 
-  test "returns a sanitized map" do
+  test "returns a converted map" do
     products = %{
       "productRecords" => [
         %{
@@ -20,16 +20,16 @@ defmodule Pricezilla.ProductSanitizerTest do
       %{
         category: "home-furnishings",
         discontinued: false,
-        external_product_id: 123456,
-        product_name: "Nice Chair",
+        external_product_id: "123456",
+        name: "Nice Chair",
         price: 3025
       }
     ]
 
-    assert ProductSanitizer.sanitize_all(products) == expected_response
+    assert ProductMapper.convert_all(products) == expected_response
   end
 
-  test "sanitizes a given product" do
+  test "convert to a proper format a given product" do
     product = %{
       "category" => "home-furnishings",
       "discontinued" => false,
@@ -41,17 +41,17 @@ defmodule Pricezilla.ProductSanitizerTest do
     expected_response = %{
       category: "home-furnishings",
       discontinued: false,
-      external_product_id: 123456,
-      product_name: "Nice Chair",
+      external_product_id: "123456",
+      name: "Nice Chair",
       price: 3025
     }
 
-    assert ProductSanitizer.sanitize_product(product) == expected_response
+    assert ProductMapper.convert_product(product) == expected_response
   end
 
   test "converts the price in dollar string to cents integer" do
     price_in_dollar = "$100.01"
 
-    assert ProductSanitizer.price_in_cents(price_in_dollar) == 10001
+    assert ProductMapper.price_in_cents(price_in_dollar) == 10001
   end
 end

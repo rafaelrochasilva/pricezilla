@@ -1,29 +1,29 @@
-defmodule Pricezilla.PastPriceRecordSanitizerTest do
+defmodule Pricezilla.PastPriceRecordMapperTest do
   use ExUnit.Case, async: true
 
-  alias Pricezilla.PastPriceRecordSanitizer
+  alias Pricezilla.PastPriceRecordMapper
 
   test "returns a sanitized map" do
     current_product = %{
       id: 1,
       external_product_id: 123456,
-      product_name: "Nice Chair",
+      name: "Nice Chair",
       price: 2000
     }
 
     new_product = %{
       external_product_id: 123456,
-      product_name: "Nice Chair",
+      name: "Nice Chair",
       price: 4000
     }
 
     expected_response = %{
       product_id: current_product.id,
-      percentage_change: 1.0,
+      percentage_change: 100.0,
       price: current_product.price
     }
 
-    assert PastPriceRecordSanitizer.sanitize(new_product, current_product) == expected_response
+    assert PastPriceRecordMapper.convert(new_product, current_product) == expected_response
   end
 
   describe "calculates the percentage change" do
@@ -31,14 +31,14 @@ defmodule Pricezilla.PastPriceRecordSanitizerTest do
       current_price = 2000
       new_price = 4000
 
-      assert PastPriceRecordSanitizer.percentage_change(current_price, new_price) == 1.0
+      assert PastPriceRecordMapper.percentage_change(current_price, new_price) == 100.0
     end
 
     test "decreases prices" do
       current_price = 4000
       new_price = 2000
 
-      assert PastPriceRecordSanitizer.percentage_change(current_price, new_price) == -0.5
+      assert PastPriceRecordMapper.percentage_change(current_price, new_price) == -50.0
     end
   end
 end

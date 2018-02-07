@@ -51,10 +51,8 @@ defmodule Pricezilla.FakeHttpClient do
   end
 
   defp fetch_products(random: true) do
-    products = %{
-      productRecords: dynamic_data()
-    }
-    Poison.encode!(products)
+    %{ productRecords: dynamic_data() }
+    |> Poison.encode!
   end
 
   defp random_data() do

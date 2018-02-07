@@ -1,11 +1,13 @@
 defmodule Pricezilla.PriceProcessor do
   @moduledoc """
   The PriceProcessor is responsable to fetch the new data from external api,
-  sanitize the products and save.
+  convert the products to a proper format and save.
   """
+  require Logger
+
   use GenServer
 
-  alias Pricezilla.{ProductFetcher, ProductSanitizer, ProductDataset, FakeHttpClient}
+  alias Pricezilla.{ProductFetcher, ProductMapper, ProductDataset, FakeHttpClient}
 
   @name :price_processor
   @time 30 * 24
@@ -18,18 +20,18 @@ defmodule Pricezilla.PriceProcessor do
   # Server Callbacks
 
   def init(:ok) do
-    IO.puts "Fetching prices.."
+    Logger.info "[Fetching Prices]"
     initial_state = process()
-    IO.puts "Products processed: #{inspect(initial_state)}"
-    scheadule_refresh()
+    Logger.info "[Products processed] #{inspect(initial_state)}"
+    schedule_refresh()
     {:ok, initial_state}
   end
 
   def handle_info(:refresh, _state) do
-    IO.puts "Refreshing products..."
+    Logger.info "[Refreshing products]"
     new_state = process()
-    IO.puts "Products processed: #{inspect(new_state)}"
-    scheadule_refresh()
+    Logger.info "[Products processed] #{inspect(new_state)}"
+    schedule_refresh()
     {:noreply, new_state}
   end
 
@@ -37,7 +39,7 @@ defmodule Pricezilla.PriceProcessor do
   # seconds scheduler, to test quickly using:
   #
   # Process.send_after(self(), :refresh, :timer.seconds(2))
-  defp scheadule_refresh do
+  defp schedule_refresh do
     Process.send_after(self(), :refresh, :timer.hours(@time))
   end
 
@@ -49,7 +51,7 @@ defmodule Pricezilla.PriceProcessor do
     {:ok, products} = ProductFetcher.get(client)
 
     products
-    |> ProductSanitizer.sanitize_all()
+    |> ProductMapper.convert_all()
     |> ProductDataset.insert_all()
   end
 end
