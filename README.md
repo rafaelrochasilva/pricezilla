@@ -1,7 +1,7 @@
 # Pricezilla
 
 Pricezilla is one of the best choices for tracking products pricing. :)
-Product price information is fetched from an external API - Omege Princing Inc.
+Product price information is fetched from an external API - Abc Princing,
 a **FICTICIOUS** API and Company.
 
 ## Installation
@@ -13,8 +13,8 @@ Setup libraries:
 
 Create .env file with the keys, (since the keys are fake I'm sharing it here)
 ```
-export OMEGA_PRICING_API_KEY="SF934-DKFJ3-S3CR3T-K3Y"
-export OMEGA_PRICING_API_URL="https://omegapricinginc.com/pricing/records.json"
+export OMEGA_PRICING_API_KEY="RA8R2-LEBJ2-SACI4X-A3J"
+export OMEGA_PRICING_API_URL="https://abcpricing.com/"
 ```
 
 Load the .env:
