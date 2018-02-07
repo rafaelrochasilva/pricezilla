@@ -19,7 +19,7 @@ defmodule Pricezilla.ProductFetcher do
 
   defp url_with_query do
     url()
-    |> URI.merge("?" <> query_params())
+    |> URI.merge(query())
     |> to_string
   end
 
@@ -27,12 +27,16 @@ defmodule Pricezilla.ProductFetcher do
     System.get_env("OMEGA_PRICING_API_URL")
   end
 
-  defp query_params do
+  defp query do
+    params = URI.encode_query(query_params())
+    "?" <> params
+  end
+
+  def query_params do
     %{
       api_key: System.get_env("OMEGA_PRICING_API_KEY"),
-      start_date: Timex.shift(Timex.today, days: 1),
+      start_date: Timex.shift(Timex.today, days: -30),
       end_date: Timex.today
     }
-    |> URI.encode_query
   end
 end

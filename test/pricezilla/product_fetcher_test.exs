@@ -32,4 +32,10 @@ defmodule Pricezilla.ProductFetcherTest do
 
     assert ProductFetcher.get(FakeHttpClient, url) == {:error, message}
   end
+
+  test "verifies if start_date is 30 days ago" do
+    params = ProductFetcher.query_params()
+
+    assert params.start_date == Timex.shift(params.end_date, days: -30)
+  end
 end
