@@ -14,6 +14,6 @@ defmodule Pricezilla.PastPriceRecordSanitizer do
 
   @spec percentage_change(number, number) :: float
   def percentage_change(current_price, new_price) do
-    (new_price - current_price) / current_price
+    (new_price - current_price) / current_price * 100
   end
 end

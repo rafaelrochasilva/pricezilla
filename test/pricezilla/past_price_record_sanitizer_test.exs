@@ -19,7 +19,7 @@ defmodule Pricezilla.PastPriceRecordSanitizerTest do
 
     expected_response = %{
       product_id: current_product.id,
-      percentage_change: 1.0,
+      percentage_change: 100.0,
       price: current_product.price
     }
 
@@ -31,14 +31,14 @@ defmodule Pricezilla.PastPriceRecordSanitizerTest do
       current_price = 2000
       new_price = 4000
 
-      assert PastPriceRecordSanitizer.percentage_change(current_price, new_price) == 1.0
+      assert PastPriceRecordSanitizer.percentage_change(current_price, new_price) == 100.0
     end
 
     test "decreases prices" do
       current_price = 4000
       new_price = 2000
 
-      assert PastPriceRecordSanitizer.percentage_change(current_price, new_price) == -0.5
+      assert PastPriceRecordSanitizer.percentage_change(current_price, new_price) == -50.0
     end
   end
 end
