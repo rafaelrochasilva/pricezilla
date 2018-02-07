@@ -1,10 +1,11 @@
-defmodule Pricezilla.PastPriceRecordSanitizer do
+defmodule Pricezilla.PastPriceRecordMapper do
   @moduledoc """
-  Sanitizes the past price record to proper format
+  Transforms the product struct to a past price record format. It also converts
+  the price to percentage.
   """
 
-  @spec sanitize(any, any) :: map
-  def sanitize(product, current_product) do
+  @spec convert(any, any) :: map
+  def convert(product, current_product) do
     %{
       product_id: current_product.id,
       percentage_change: percentage_change(current_product.price, product.price),

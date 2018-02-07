@@ -1,10 +1,10 @@
 defmodule Pricezilla.ProductDataset do
   @moduledoc """
-  Responsible for managing data: create, read and updates datasets.
+  Responsible for managing data: create, read and updates datasets.
   """
   require Logger
 
-  alias Pricezilla.{Repo, Product, PastPriceRecord, PastPriceRecordSanitizer}
+  alias Pricezilla.{Repo, Product, PastPriceRecord, PastPriceRecordMapper}
 
   @spec insert_all([map]) :: [map]
   def insert_all(products) do
@@ -44,7 +44,7 @@ defmodule Pricezilla.ProductDataset do
 
     past_price_record =
       new_product
-      |> PastPriceRecordSanitizer.sanitize(current_product)
+      |> PastPriceRecordMapper.convert(current_product)
       |> PastPriceRecord.changeset()
 
     product_with_record = Ecto.Changeset.put_assoc(product, :past_price_records, [past_price_record])
