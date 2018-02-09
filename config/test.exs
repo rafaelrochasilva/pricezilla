@@ -8,6 +8,7 @@ config :pricezilla, Pricezilla.Repo,
   port: 5432
 
 config :logger, level: :warn
+
 config :logger, :info,
   path: "log/test/info.log",
   level: :info

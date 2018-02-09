@@ -28,7 +28,7 @@ defmodule Pricezilla.ProductMapper do
     price =
       price_string
       |> String.trim("$")
-      |> String.to_float
+      |> String.to_float()
 
     round(price * 100)
   end

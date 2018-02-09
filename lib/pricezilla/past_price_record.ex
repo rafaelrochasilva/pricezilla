@@ -2,9 +2,9 @@ defmodule Pricezilla.PastPriceRecord do
   use Ecto.Schema
 
   schema "past_price_records" do
-    field :percentage_change, :float
-    field :price, :integer
-    belongs_to :product, Pricezilla.Product
+    field(:percentage_change, :float)
+    field(:price, :integer)
+    belongs_to(:product, Pricezilla.Product)
 
     timestamps()
   end

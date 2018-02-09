@@ -33,6 +33,7 @@ defmodule Pricezilla.ProductDatasetTest do
     test "creates a new past price record and update product price for a discontinued product" do
       external_product_id = "123456"
       existing_product = Repo.get_by(Product, external_product_id: external_product_id)
+
       new_product = %{
         category: "home-furnishings",
         discontinued: true,
@@ -42,9 +43,10 @@ defmodule Pricezilla.ProductDatasetTest do
       }
 
       {:ok, product_created} = ProductDataset.insert_product(new_product)
+
       past_price_record =
         product_created.past_price_records
-        |> List.first
+        |> List.first()
 
       assert product_created.external_product_id == external_product_id
       refute product_created.price == existing_product.price
@@ -56,6 +58,7 @@ defmodule Pricezilla.ProductDatasetTest do
     test "creates a new past price record and update product price for a continued product" do
       external_product_id = "123457"
       existing_product = Repo.get_by(Product, external_product_id: external_product_id)
+
       new_product = %{
         category: "sports",
         discontinued: false,
@@ -65,9 +68,10 @@ defmodule Pricezilla.ProductDatasetTest do
       }
 
       {:ok, product_created} = ProductDataset.insert_product(new_product)
+
       past_price_record =
         product_created.past_price_records
-        |> List.first
+        |> List.first()
 
       assert product_created.external_product_id == external_product_id
       refute product_created.price == existing_product.price
@@ -80,6 +84,7 @@ defmodule Pricezilla.ProductDatasetTest do
   describe "Given an existing product, with same name and price" do
     test "does not create a new product" do
       external_product_id = "123456"
+
       new_product = %{
         category: "home-furnishings",
         discontinued: false,
@@ -92,10 +97,7 @@ defmodule Pricezilla.ProductDatasetTest do
 
       {:error, changeset} = ProductDataset.insert_product(new_product)
 
-      errors = Enum.map(
-        changeset.errors,
-        fn {field, {message, _opts}} -> {field, message} end
-      )
+      errors = Enum.map(changeset.errors, fn {field, {message, _opts}} -> {field, message} end)
 
       assert {:price, "cannot save a same price product"} in errors
     end
@@ -116,10 +118,7 @@ defmodule Pricezilla.ProductDatasetTest do
 
       {:error, changeset} = ProductDataset.insert_product(product)
 
-      errors = Enum.map(
-        changeset.errors,
-        fn {field, {message, _opts}} -> {field, message} end
-      )
+      errors = Enum.map(changeset.errors, fn {field, {message, _opts}} -> {field, message} end)
 
       assert {:name, "cannot use a different product name"} in errors
     end
@@ -127,10 +126,10 @@ defmodule Pricezilla.ProductDatasetTest do
 
   defp load_products_into_database() do
     products = [
-      %Product{ external_product_id: "123456", name: "Nice Chair", price: 4000 },
-      %Product{ external_product_id: "123457", name: "Surf Board", price: 10000 }
+      %Product{external_product_id: "123456", name: "Nice Chair", price: 4000},
+      %Product{external_product_id: "123457", name: "Surf Board", price: 10000}
     ]
 
-    Enum.each(products, fn (product) -> Pricezilla.Repo.insert(product) end)
+    Enum.each(products, fn product -> Pricezilla.Repo.insert(product) end)
   end
 end

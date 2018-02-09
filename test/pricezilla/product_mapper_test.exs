@@ -9,7 +9,7 @@ defmodule Pricezilla.ProductMapperTest do
         %{
           "category" => "home-furnishings",
           "discontinued" => false,
-          "id" => 123456,
+          "id" => 123_456,
           "name" => "Nice Chair",
           "price" => "$30.25"
         }
@@ -33,7 +33,7 @@ defmodule Pricezilla.ProductMapperTest do
     product = %{
       "category" => "home-furnishings",
       "discontinued" => false,
-      "id" => 123456,
+      "id" => 123_456,
       "name" => "Nice Chair",
       "price" => "$30.25"
     }

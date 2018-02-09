@@ -16,9 +16,10 @@ defmodule Pricezilla.Application do
   def select_children do
     import Supervisor.Spec, warn: false
 
-    case Mix.env do
+    case Mix.env() do
       :dev ->
         [supervisor(Pricezilla.Repo, []), worker(Pricezilla.PriceProcessor, [])]
+
       :test ->
         [supervisor(Pricezilla.Repo, [])]
     end

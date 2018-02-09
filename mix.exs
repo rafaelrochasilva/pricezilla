@@ -4,9 +4,9 @@ defmodule Pricezilla.Mixfile do
   def project do
     [
       app: :pricezilla,
-      version: "0.1.0",
-      elixir: "~> 1.5",
-      start_permanent: Mix.env == :prod,
+      version: "0.2.0",
+      elixir: "~> 1.6",
+      start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps()
     ]
@@ -38,7 +38,7 @@ defmodule Pricezilla.Mixfile do
       "ecto.test.prepare": ["ecto.drop", "ecto.create", "ecto.migrate"],
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
-      "test": ["ecto.create --quiet", "ecto.migrate", "test"]
+      test: ["ecto.create --quiet", "ecto.migrate", "test"]
     ]
   end
 end

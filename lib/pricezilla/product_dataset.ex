@@ -13,9 +13,11 @@ defmodule Pricezilla.ProductDataset do
 
   @spec insert_product(map) :: {:ok, any} | {:error, binary}
   def insert_product(new_product) do
-    current_product = Repo.get_by(
-      Product, external_product_id: new_product.external_product_id
-    )
+    current_product =
+      Repo.get_by(
+        Product,
+        external_product_id: new_product.external_product_id
+      )
 
     case current_product do
       nil -> create(new_product)
@@ -28,10 +30,11 @@ defmodule Pricezilla.ProductDataset do
 
     case Repo.insert(changeset) do
       {:ok, new_product} ->
-        Logger.info "[Time] #{Timex.now} [Product created] #{inspect new_product}"
+        Logger.info("[Time] #{Timex.now()} [Product created] #{inspect(new_product)}")
         {:ok, new_product}
+
       {:error, changeset} ->
-        Logger.error "[Time] #{Timex.now} [Error message] #{inspect changeset}"
+        Logger.error("[Time] #{Timex.now()} [Error message] #{inspect(changeset)}")
         {:error, changeset.errors}
     end
   end
@@ -47,17 +50,19 @@ defmodule Pricezilla.ProductDataset do
       |> PastPriceRecordMapper.convert(current_product)
       |> PastPriceRecord.changeset()
 
-    product_with_record = Ecto.Changeset.put_assoc(product, :past_price_records, [past_price_record])
+    product_with_record =
+      Ecto.Changeset.put_assoc(product, :past_price_records, [past_price_record])
 
-    Repo.transaction fn ->
+    Repo.transaction(fn ->
       case Repo.update(product_with_record) do
         {:ok, product_updated} ->
-          Logger.info "[Time] #{Timex.now} [Product updated] #{inspect product_updated}"
+          Logger.info("[Time] #{Timex.now()} [Product updated] #{inspect(product_updated)}")
           product_updated
+
         {:error, changeset} ->
-          Logger.error "[Time] #{Timex.now} [Error message] #{inspect changeset}"
+          Logger.error("[Time] #{Timex.now()} [Error message] #{inspect(changeset)}")
           Repo.rollback(changeset)
       end
-    end
+    end)
   end
 end

@@ -4,9 +4,7 @@ use Mix.Config
 
 config :pricezilla, ecto_repos: [Pricezilla.Repo]
 
-config :logger,
-  backends: [{LoggerFileBackend, :info},
-             {LoggerFileBackend, :error}]
+config :logger, backends: [{LoggerFileBackend, :info}, {LoggerFileBackend, :error}]
 
 # This configuration is loaded before any dependency and is restricted
 # to this project. If another project depends on this project, this
@@ -33,4 +31,4 @@ config :logger,
 # Configuration from the imported file will override the ones defined
 # here (which is why it is important to import them last).
 #
-import_config "#{Mix.env}.exs"
+import_config "#{Mix.env()}.exs"

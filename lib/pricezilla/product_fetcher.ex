@@ -35,8 +35,8 @@ defmodule Pricezilla.ProductFetcher do
   def query_params do
     %{
       api_key: System.get_env("OMEGA_PRICING_API_KEY"),
-      start_date: Timex.shift(Timex.today, days: -30),
-      end_date: Timex.today
+      start_date: Timex.shift(Timex.today(), days: -30),
+      end_date: Timex.today()
     }
   end
 end

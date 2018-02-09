@@ -10,8 +10,8 @@ defmodule Pricezilla.PriceProcessorTest do
   end
 
   test "processes all products" do
-    %Product{ external_product_id: "123456", name: "Nice Chair", price: 4000 }
-    |> Pricezilla.Repo.insert
+    %Product{external_product_id: "123456", name: "Nice Chair", price: 4000}
+    |> Pricezilla.Repo.insert()
 
     current_nice_chair = Repo.get_by(Product, external_product_id: "123456")
 

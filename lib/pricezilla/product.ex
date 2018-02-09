@@ -4,10 +4,10 @@ defmodule Pricezilla.Product do
   alias Pricezilla.PastPriceRecord
 
   schema "products" do
-    field :external_product_id, :string
-    field :price, :integer
-    field :name, :string
-    has_many :past_price_records, PastPriceRecord
+    field(:external_product_id, :string)
+    field(:price, :integer)
+    field(:name, :string)
+    has_many(:past_price_records, PastPriceRecord)
 
     timestamps()
   end
@@ -24,20 +24,22 @@ defmodule Pricezilla.Product do
     |> Ecto.Changeset.cast(new_product, [:price, :name])
     |> Ecto.Changeset.validate_required([:price, :name])
     |> different_price(current_product.price, new_product.price)
-    |> Ecto.Changeset.validate_change(
-      :name, fn(:name, name) ->
-        same_name(name, current_product.name)
-      end
-    )
+    |> Ecto.Changeset.validate_change(:name, fn :name, name ->
+      same_name(name, current_product.name)
+    end)
   end
 
   def validate_continued(changeset, discontinued) do
     case discontinued == false do
       false ->
         Ecto.Changeset.add_error(
-          changeset, :discontinued, "cannot save a discontinued product"
+          changeset,
+          :discontinued,
+          "cannot save a discontinued product"
         )
-      true -> changeset
+
+      true ->
+        changeset
     end
   end
 
@@ -52,9 +54,13 @@ defmodule Pricezilla.Product do
     case current_price == new_price do
       true ->
         Ecto.Changeset.add_error(
-          changeset, :price, "cannot save a same price product"
+          changeset,
+          :price,
+          "cannot save a same price product"
         )
-      false -> changeset
+
+      false ->
+        changeset
     end
   end
 end

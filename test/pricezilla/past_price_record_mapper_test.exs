@@ -6,13 +6,13 @@ defmodule Pricezilla.PastPriceRecordMapperTest do
   test "returns a sanitized map" do
     current_product = %{
       id: 1,
-      external_product_id: 123456,
+      external_product_id: 123_456,
       name: "Nice Chair",
       price: 2000
     }
 
     new_product = %{
-      external_product_id: 123456,
+      external_product_id: 123_456,
       name: "Nice Chair",
       price: 4000
     }

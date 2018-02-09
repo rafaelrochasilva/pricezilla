@@ -21,16 +21,21 @@ defmodule Pricezilla.FakeHttpClient do
     cond do
       !String.match?(url, ~r/api_key/) ->
         {:error, "You must provide a valid authenticated access token."}
+
       !String.match?(url, ~r/start_date/) ->
         {:error, "You must provide a start_date."}
+
       !String.match?(url, ~r/end_date/) ->
         {:error, "You must provide a end_date."}
-      true -> :ok
+
+      true ->
+        :ok
     end
   end
 
   defp response do
     random = random_data()
+
     %{
       body: fetch_products(random: random),
       headers: [{"Connection", "keep-alive"}],
@@ -51,19 +56,19 @@ defmodule Pricezilla.FakeHttpClient do
   end
 
   defp fetch_products(random: true) do
-    %{ productRecords: dynamic_data() }
-    |> Poison.encode!
+    %{productRecords: dynamic_data()}
+    |> Poison.encode!()
   end
 
   defp random_data() do
-    case Mix.env do
+    case Mix.env() do
       :dev -> true
       :test -> false
     end
   end
 
   defp dynamic_data do
-    for _ <- (1..4) do
+    for _ <- 1..4 do
       %{
         "category" => Enum.random(categories()),
         "discontinued" => Enum.random([true, false]),
@@ -79,7 +84,7 @@ defmodule Pricezilla.FakeHttpClient do
   end
 
   defp ids do
-    [12345, 12346, 12347, 123458]
+    [12345, 12346, 12347, 123_458]
   end
 
   defp prices do
@@ -87,6 +92,6 @@ defmodule Pricezilla.FakeHttpClient do
   end
 
   defp names do
-    ["generic_1","generic_2","generic_3","generic_4","generic_5"]
+    ["generic_1", "generic_2", "generic_3", "generic_4", "generic_5"]
   end
 end

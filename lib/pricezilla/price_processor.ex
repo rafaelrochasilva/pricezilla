@@ -20,17 +20,17 @@ defmodule Pricezilla.PriceProcessor do
   # Server Callbacks
 
   def init(:ok) do
-    Logger.info "[Fetching Prices]"
+    Logger.info("[Fetching Prices]")
     initial_state = process()
-    Logger.info "[Products processed] #{inspect(initial_state)}"
+    Logger.info("[Products processed] #{inspect(initial_state)}")
     schedule_refresh()
     {:ok, initial_state}
   end
 
   def handle_info(:refresh, _state) do
-    Logger.info "[Refreshing products]"
+    Logger.info("[Refreshing products]")
     new_state = process()
-    Logger.info "[Products processed] #{inspect(new_state)}"
+    Logger.info("[Products processed] #{inspect(new_state)}")
     schedule_refresh()
     {:noreply, new_state}
   end
