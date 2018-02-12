@@ -7,6 +7,7 @@ defmodule Pricezilla.Product do
     field(:external_product_id, :string)
     field(:price, :integer)
     field(:name, :string)
+    field(:discontinued, :boolean, virtual: true)
     has_many(:past_price_records, PastPriceRecord)
 
     timestamps()
@@ -14,9 +15,9 @@ defmodule Pricezilla.Product do
 
   def changeset(params \\ %{}) do
     %__MODULE__{}
-    |> Ecto.Changeset.cast(params, [:external_product_id, :price, :name])
-    |> Ecto.Changeset.validate_required([:external_product_id, :price, :name])
-    |> validate_continued(params.discontinued)
+    |> Ecto.Changeset.cast(params, [:external_product_id, :price, :name, :discontinued])
+    |> Ecto.Changeset.validate_required([:external_product_id, :price, :name, :discontinued])
+    |> validate_continued()
   end
 
   def changeset(current_product, new_product) do
@@ -29,17 +30,15 @@ defmodule Pricezilla.Product do
     end)
   end
 
-  def validate_continued(changeset, discontinued) do
-    case discontinued == false do
-      false ->
-        Ecto.Changeset.add_error(
-          changeset,
-          :discontinued,
-          "cannot save a discontinued product"
-        )
-
-      true ->
-        changeset
+  defp validate_continued(changeset) do
+    if Ecto.Changeset.get_change(changeset, :discontinued) do
+      Ecto.Changeset.add_error(
+        changeset,
+        :discontinued,
+        "cannot save a discontinued product"
+      )
+    else
+      changeset
     end
   end
 
