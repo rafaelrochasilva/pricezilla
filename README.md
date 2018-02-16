@@ -1,5 +1,7 @@
 # Pricezilla
 
+[![Build Status](https://travis-ci.org/rafaelrochasilva/pricezilla.svg?branch=master)](https://travis-ci.org/rafaelrochasilva/pricezilla)
+
 Pricezilla is one of the best choices for tracking products pricing. :)
 Product price information is fetched from an external API - Abc Princing,
 a **FICTICIOUS** API and Company.
